@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class S1_UIManger : MonoBehaviour
 {
-    private static UIManager instance;
-    public static UIManager Instance
+    private static S1_UIManger instance;
+    public static S1_UIManger Instance
     {
         get
         {
@@ -17,15 +17,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameTimeText;
     public void SetGameTimeText(string value, bool show)
     {
-        UIManager.Instance.gameTimeText.gameObject.SetActive(show);
+        S1_UIManger.Instance.gameTimeText.gameObject.SetActive(show);
         gameTimeText.text = value;
     }
 
     [SerializeField] private TextMeshProUGUI countTimeText;
     public void SetCountTimeText(string value, bool show)
     {
-        UIManager.Instance.countTimeText.gameObject.SetActive(show);
-        gameTimeText.text = value;
+        S1_UIManger.Instance.countTimeText.gameObject.SetActive(show);
+        countTimeText.text = value;
     }
 
     private void Awake()
@@ -35,8 +35,8 @@ public class UIManager : MonoBehaviour
 
     public void Init()
     {
-        UIManager.Instance.gameTimeText.gameObject.SetActive(true);
-        UIManager.Instance.countTimeText.gameObject.SetActive(false);
+        S1_UIManger.Instance.gameTimeText.gameObject.SetActive(true);
+        S1_UIManger.Instance.countTimeText.gameObject.SetActive(false);
     }
 
     void Update()

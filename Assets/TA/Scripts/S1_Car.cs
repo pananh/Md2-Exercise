@@ -31,7 +31,7 @@ public class S1_Car : MonoBehaviour
 
     private void AutoMoveCar()
     {
-        transform.Translate(vector3Direction * Time.deltaTime * GameManager.Instance.GameSpeed);
+        transform.Translate(vector3Direction * Time.deltaTime * S1_GM.Instance.GameSpeed);
 
     }
 }
