@@ -30,8 +30,8 @@ public class S2_Car : MonoBehaviour
 
     private void MoveCar(Vector3 vector3Point)
     {
-        transform.Translate(vector3Direction * Time.deltaTime * S1_GM.Instance.GameSpeed);
+        //transform.Translate(vector3Direction * Time.deltaTime * S1_GM.Instance.GameSpeed);
 
-        Vector3 dir = (this.transform.position - camera.transform.position).normalized
+        //Vector3 dir = (this.transform.position - camera.transform.position).normalized
     }
 }
