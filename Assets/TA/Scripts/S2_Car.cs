@@ -13,25 +13,65 @@ public class S2_Car : MonoBehaviour
             return instance;
         }
     }
+    private Vector3 destinationCar, destinationByCamera;
+    private Camera cameraCar;
+    [SerializeField] private float speed;
+    private bool checkDestinationCar;
 
     void Awake()
     {
         instance = this;
+        cameraCar = Camera.main;
+        speed = 10f;
+        destinationCar = transform.position;
+        checkDestinationCar = true;
     }
-    public void Init()
+
+    void Start()
     {
+       
+
+
     }
+
 
     void Update()
     {
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            destinationCar = Input.mousePosition;
+
+            Debug.Log("Mouse Screen: " + destinationCar);
+
+            destinationByCamera = cameraCar.ScreenToWorldPoint(destinationCar);
+
+            destinationCar.x = destinationByCamera.x + destinationCar.x;
+            destinationCar.y = destinationByCamera.y + destinationCar.y;
+            destinationCar.z = 0;
+
+            checkDestinationCar = false;
+
+            Debug.Log("Wordl Position" + destinationCar);
+        }
+        if (!checkDestinationCar)
+        {
+            MoveCar(destinationCar);
+        }
+
     }
 
 
 
-    private void MoveCar(Vector3 vector3Point)
+    private void MoveCar(Vector3 destination)
     {
-        //transform.Translate(vector3Direction * Time.deltaTime * S1_GM.Instance.GameSpeed);
+        if (transform.position == destination)
+        {
+            checkDestinationCar = true;
+            return;
+        }
 
-        //Vector3 dir = (this.transform.position - camera.transform.position).normalized
+        transform.Translate(Time.deltaTime * speed * (destination - transform.position).normalized);
+
     }
 }
