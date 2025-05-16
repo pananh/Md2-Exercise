@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,65 +14,55 @@ public class S2_Car : MonoBehaviour
             return instance;
         }
     }
-    private Vector3 destinationCar, destinationByCamera;
+    private Vector3 mousePosition, destinationByCamera;
     private Camera cameraCar;
     [SerializeField] private float speed;
-    private bool checkDestinationCar;
+   
 
     void Awake()
     {
         instance = this;
         cameraCar = Camera.main;
         speed = 10f;
-        destinationCar = transform.position;
-        checkDestinationCar = true;
-    }
-
-    void Start()
-    {
-       
-
+        destinationByCamera = transform.position;
 
     }
-
 
     void Update()
     {
 
         if (Input.GetMouseButtonDown(0))
         {
-            destinationCar = Input.mousePosition;
+            mousePosition = Input.mousePosition;
 
-            Debug.Log("Mouse Screen: " + destinationCar);
+            Debug.Log("Mouse Screen: " + mousePosition);
 
-            destinationByCamera = cameraCar.ScreenToWorldPoint(destinationCar);
+  
+            mousePosition.z = 10;
 
-            destinationCar.x = destinationByCamera.x + destinationCar.x;
-            destinationCar.y = destinationByCamera.y + destinationCar.y;
-            destinationCar.z = 0;
+            destinationByCamera = cameraCar.ScreenToWorldPoint(mousePosition);
 
-            checkDestinationCar = false;
-
-            Debug.Log("Wordl Position" + destinationCar);
-        }
-        if (!checkDestinationCar)
-        {
-            MoveCar(destinationCar);
+            Debug.Log("World Position" + mousePosition);
         }
 
+        MoveCar(destinationByCamera);
     }
 
 
 
     private void MoveCar(Vector3 destination)
     {
-        if (transform.position == destination)
+        // VECTOR3.DOT  \\ CHECK DISTANCE
+
+        Vector3 direction = destination - transform.position;
+
+        float x = direction.sqrMagnitude;
+        if (x < 0.1f)
         {
-            checkDestinationCar = true;
             return;
         }
 
-        transform.Translate(Time.deltaTime * speed * (destination - transform.position).normalized);
-
+        transform.position += direction.normalized * speed * Time.deltaTime;
+        Debug.Log("Car Position: " + transform.position);
     }
 }
