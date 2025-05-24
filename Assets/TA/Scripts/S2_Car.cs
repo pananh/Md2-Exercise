@@ -14,7 +14,7 @@ public class S2_Car : MonoBehaviour
             return instance;
         }
     }
-    private Vector3 mousePosition, destinationByCamera;
+    private Vector3 mousePos, destinationPos;
     private Camera cameraCar;
     [SerializeField] private float speed;
    
@@ -23,9 +23,8 @@ public class S2_Car : MonoBehaviour
     {
         instance = this;
         cameraCar = Camera.main;
-        speed = 10f;
-        destinationByCamera = transform.position;
-
+        speed = 15f;
+        destinationPos = transform.position;
     }
 
     void Update()
@@ -33,36 +32,28 @@ public class S2_Car : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            mousePosition = Input.mousePosition;
+            mousePos = Input.mousePosition;
+            Debug.Log("Mouse Screen: " + mousePos);
+            mousePos.z = 10;
 
-            Debug.Log("Mouse Screen: " + mousePosition);
-
-  
-            mousePosition.z = 10;
-
-            destinationByCamera = cameraCar.ScreenToWorldPoint(mousePosition);
-
-            Debug.Log("World Position" + mousePosition);
+            destinationPos = cameraCar.ScreenToWorldPoint(mousePos);
+            Debug.Log("World Position: " + mousePos);
         }
-
-        MoveCar(destinationByCamera);
+        MoveCar(destinationPos);
     }
 
 
 
     private void MoveCar(Vector3 destination)
     {
-        // VECTOR3.DOT  \\ CHECK DISTANCE
+        // VECTOR3.DOT  // CHECK DISTANCE
 
         Vector3 direction = destination - transform.position;
-
         float x = direction.sqrMagnitude;
         if (x < 0.1f)
         {
             return;
         }
-
         transform.position += direction.normalized * speed * Time.deltaTime;
-        Debug.Log("Car Position: " + transform.position);
     }
 }
