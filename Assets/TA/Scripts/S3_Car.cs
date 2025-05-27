@@ -3,49 +3,71 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class S3_Test : MonoBehaviour
+public class S3_Car : MonoBehaviour
 {
-    [SerializeField] private int speedGame = 10;
+    private S3_Car instance;
+    public S3_Car Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
+
+    [SerializeField] private int speedGame;
+    private float speedForce; 
+    private float moveHorizontal, moveVertical;
     const string IpHor = "Horizontal";
     const string IpVer = "Vertical";
-    const string IpJump = "Jump";
-    const string IpFire1 = "Fire1";
-    const string IpFire2 = "Fire2";
+    Rigidbody rb;
+    [SerializeField] Joystick joystick;
+
 
     void Awake()
     {
-        speedGame = 10;
-
+        speedGame = 100;
+        speedForce = speedGame ;  // speedGame / 5f;
+        instance = this;
+        rb = GetComponent<Rigidbody>();
+        moveHorizontal = 0f;
+        moveVertical = 0f;
     }
 
 
     void Update()
     {
-        if ( (Input.GetAxis(IpHor) != 0) )
+        moveHorizontal = Input.GetAxis(IpHor);
+        moveVertical = Input.GetAxis(IpVer);
+        if ((moveHorizontal != 0) || (moveVertical != 0))
         {
-
-            Vector3 destination = transform.position + new Vector3(Input.GetAxis(IpHor), 0, 0) * speedGame * Time.deltaTime;
-            MoveCar(destination, speedGame);
-
+            MoveCar(new Vector3(moveHorizontal, 0, moveVertical) * speedGame * Time.deltaTime);
+            //MoveCarByForce(new Vector3(moveHorizontal, 0, moveVertical) * speedForce * Time.deltaTime);
         }
 
+        moveHorizontal = joystick.Horizontal;
+        moveVertical = joystick.Vertical;
+
+        if ( (moveHorizontal != 0) || (moveVertical != 0) )
+        {
+            MoveCar(new Vector3(moveHorizontal, 0 , moveVertical) * speedGame * Time.deltaTime );
+            //MoveCarByForce(new Vector3(moveHorizontal, 0, moveVertical) * speedForce * Time.deltaTime);
+        }
 
     }
 
 
 
-    private void MoveCar(Vector3 destination, float moveSpeed)
+    private void MoveCar(Vector3 direction)
     {
-        Vector3 direction = destination - transform.position;
-        float x = direction.sqrMagnitude;
-        if (x < 0.1f)
-        {
-            return;
-        }
-        transform.position += direction.normalized * moveSpeed;
-
+        transform.position += direction;
     }
 
+    private void MoveCarByForce(Vector3 forceDirection)
+    {
+        //rb.AddForce(forceDirection, ForceMode.Impulse);
+        rb.MovePosition(transform.position + forceDirection * 10);
+    }
 }
 
 
