@@ -1,13 +1,14 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
-public class S5_Car : MonoBehaviour
+public class S6_Car : MonoBehaviour
 {
-    private S5_Car instance;
-    public S5_Car Instance
+    private S6_Car instance;
+    public S6_Car Instance
     {
         get
         {
@@ -23,8 +24,12 @@ public class S5_Car : MonoBehaviour
     Quaternion targetRotation;
     float factorStartToEnd;
     float distanceSE;
+    float timeTotal = 0.0f;
 
     [SerializeField] private float speedRotation = 1.0f; // Tốc độ xoay của xe, có thể điều chỉnh trong Inspector
+    [SerializeField] LineRenderer lineRenderer;
+    Rigidbody rb;
+    [SerializeField] Vector3 addForce = new Vector3(0, 30, 20);
 
     void Awake()
     {
@@ -37,14 +42,44 @@ public class S5_Car : MonoBehaviour
 
     void Start()
     {
+        //startPos = transform.position;
+        //endPos = wayPoint[wayPointIndex[wayPointIndexCurrent]].transform.position;
+        //distanceSE = Vector3.Distance(startPos, endPos);
+
+        //string jsonString = JsonConvert.SerializeObject(wayPointIndex);
+        //Debug.Log(jsonString);
+        //var deserializedList = JsonConvert.DeserializeObject<List<int>>(jsonString);
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = false; 
+        timeTotal = Time.time;
+        rb.AddForce(addForce, ForceMode.VelocityChange);
+        lineRenderer.positionCount = 0; // Khởi tạo số lượng điểm của LineRenderer
         startPos = transform.position;
-        endPos = wayPoint[wayPointIndex[wayPointIndexCurrent]].transform.position;
-        distanceSE = Vector3.Distance(startPos, endPos);
     }
 
     void Update()
     {
-        MoveCarAuto();
+        if (Time.time - timeTotal < 5f)
+        {
+            rb.useGravity = true;
+        }
+        else         
+        {
+            rb.useGravity = false;
+        }
+
+        if (Vector3.Distance(startPos, transform.position) > 0.2f)
+        {
+
+            startPos = transform.position; // Cập nhật vị trí bắt đầu mỗi khi xe di chuyển
+            lineRenderer.positionCount += 1; // Tăng số lượng điểm của LineRenderer mỗi lần Update;
+            lineRenderer.SetPosition(lineRenderer.positionCount - 1, transform.position); // Cập nhật vị trí cuối cùng của LineRenderer
+
+
+        }
+
+
+
     }
 
     private void MoveCarAuto()
@@ -78,10 +113,9 @@ public class S5_Car : MonoBehaviour
             speedRotation = 1;
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, speedRotation);
 
-            
-            Debug.Log("transform.rotation: " + transform.rotation.eulerAngles);
+            lineRenderer.positionCount += 1;
+            lineRenderer.SetPosition(lineRenderer.positionCount-1, transform.position);
 
-            Debug.DrawLine(transform.position, nextPos, Color.red, 10f, true);
             transform.position = nextPos;
 
         }
