@@ -39,6 +39,10 @@ public class S6_Bullet : MonoBehaviour
         {
             Debug.Log("Bullet hit by Raycast: " + hitInfo.collider.gameObject.name);
             Debug.Log("Hit point: " + hitInfo.point + " distance " + hitInfo.distance);
+
+            S6_7_UI.instance.StatusText = "Bullet hit by Raycast: " + hitInfo.collider.gameObject.name + " \n at point: " + hitInfo.point + " distance: " + hitInfo.distance;
+
+
             isTrigger = true;
             lineRenderer.enabled = true;
             lineRenderer.positionCount = 1;
