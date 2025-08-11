@@ -7,7 +7,10 @@ using UnityEngine;
 
 public class S8_9_ScrollViewItems : MonoBehaviour
 {
-
+    private void Start()
+    {
+        Debug.Log("Main Branch");
+    }
 
 
 }
