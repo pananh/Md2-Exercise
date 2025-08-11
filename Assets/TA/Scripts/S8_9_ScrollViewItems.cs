@@ -9,7 +9,8 @@ public class S8_9_ScrollViewItems : MonoBehaviour
 {
     private void Start()
     {
-        Debug.Log("Main Branch");
+        Debug.Log("Main Branch 12");
+        Debug.Log("Main Branch 13");
     }
 
 
